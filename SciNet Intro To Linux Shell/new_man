@@ -1,0 +1,39 @@
+# must source this file "source new_man"
+unalias man 2> /dev/null
+unset -f man 2> /dev/null
+function man()
+{
+  if [ -d /usr/share/man/man$1 ]; then
+    sub=$1
+    shift
+    for cmd in $@; do
+      for page in /usr/share/man/man$sub/$cmd.*; do
+        if ! [ -f $page ]; then
+          echo "No manual entry for $cmd in section $sub" 1>&2
+          return 16
+        else
+          if [ "${page: -3}" == ".gz" ]; then
+            zcat $page | nroff -man | more
+          else
+            nroff -man $page | more
+          fi
+        fi
+      done
+    done
+  else
+    for cmd in $@; do
+      for page in /usr/share/man/man*/$cmd.*; do
+        if ! [ -f $page ]; then
+          echo "No manual entry for $cmd" 1>&2
+          return 16
+        else
+          if [ "${page: -3}" == ".gz" ]; then
+            zcat $page | nroff -man | more
+          else
+            nroff -man $page | more
+          fi
+        fi
+      done
+    done
+  fi
+}	

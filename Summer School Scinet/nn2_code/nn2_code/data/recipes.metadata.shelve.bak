@@ -1,0 +1,4 @@
+'sentence_length', (0, 5)
+'num_words', (512, 6)
+'encoding', (1024, 38095)
+'decoding', (39424, 38095)
